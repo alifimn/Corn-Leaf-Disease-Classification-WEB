@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corn Leaf Disease Classification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .card {
+            width: 60%;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        input[type="file"] {
+            margin-right: 10px;
+        }
+
+        input[type="submit"] {
+            padding: 8px 16px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        img {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            margin-top: 10px;
+        }
+
+        p {
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Corn Leaf Disease Classification</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" accept="image/*">
+                <input type="submit" value="Upload">
+            </form>
+
+            {% if prediction %}
+                <h2>Prediction:</h2>
+                <p id="predictionText"></p>
+                <img src="{{ image_path }}" alt="Uploaded Image">
+                <script>
+                    // Mendapatkan elemen p dengan ID 'predictionText'
+                    var predictionTextElement = document.getElementById('predictionText');
+
+                    // Mendapatkan hasil prediksi (misalnya, angka)
+                    var predictionValue = '{{ prediction}}';
+
+                    // Membuat pemetaan dari angka ke teks
+                    var predictionMapping = {
+                        1: 'Healthy',
+                        2: 'Northen Leaf',
+                        3: 'Common Rust',
+                        // Tambahkan pemetaan lainnya sesuai kebutuhan
+                    };
+
+                    // Menetapkan teks hasil prediksi ke elemen p
+                    predictionTextElement.textContent = predictionMapping[predictionValue];
+                </script>
+            {% endif %}
+
+            {% if error %}
+                <p>Error: {{ error }}</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
