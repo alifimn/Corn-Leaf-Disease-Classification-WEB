@@ -109,8 +109,15 @@ def predict_image(file_path):
     # Lakukan prediksi pada gambar yang telah diproses
     test_values = [red_values, green_values, blue_values, bercak_coklat_ditemukan, bercak_kuning_ditemukan, jumlah_bercak_coklat, jumlah_bercak_kuning]
     values = np.array(test_values).reshape(-1, 7)
-    prediction = model.predict(values)
-
+    pred = model.predict(values)
+    if pred[0] == 0:
+        prediction = 'Common Rust'
+    elif pred[0] == 1:
+        prediction = 'Healthy'
+    elif pred[0] == 2:
+        prediction = 'Northern Leaf'
+    else:
+        prediction = 'Unknown'
     return prediction
 
 @app.route('/')
@@ -131,7 +138,7 @@ def upload_file():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         file.save(file_path)
         prediction = predict_image(file_path)
-        return render_template('index.html', prediction=prediction[0], image_path=file_path)
+        return render_template('index.html', prediction=prediction, image_path=file_path)
 
 if __name__ == '__main__':
     app.run(debug=True)
