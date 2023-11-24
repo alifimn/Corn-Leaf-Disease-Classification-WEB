@@ -108,7 +108,8 @@
         </form>
 
         {% if prediction %}
-        <h2>Prediction: {{ prediction }}</h2>
+        <h2>Prediction:</h2>
+        <h3><p>{{ prediction }}</p></h3>
         <img src="{{ image_path }}" alt="Uploaded Image" />
         {% endif %} {% if error %}
         <p>Error: {{ error }}</p>

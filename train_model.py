@@ -5,7 +5,7 @@ from sklearn.preprocessing import LabelEncoder
 import pandas as pd
 
 # Membaca data training dari file Excel
-data_train = pd.read_excel("F:\\TUGAS KULIAH\\semester 5\\project\code\\project\\fixed_project\\data_train.xlsx")
+data_train = pd.read_excel("F:\\TUGAS KULIAH\\semester 5\\project\code\\project\\fixed_project\\data_train (4).xlsx")
 
 # Lakukan preprocessing data yang diperlukan (misalnya: encoding label)
 en = LabelEncoder()
@@ -21,4 +21,4 @@ your_trained_model = GaussianNB()
 your_trained_model.fit(x_train, y_train)
 
 # Simpan model yang sudah dilatih menggunakan joblib
-joblib.dump(your_trained_model, 'model_from_excel.joblib')
+joblib.dump(your_trained_model, 'model.joblib')
