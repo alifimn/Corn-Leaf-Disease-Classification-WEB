@@ -17,7 +17,6 @@ x_train = dataset_train.iloc[:, :-1].values
 y_train = dataset_train.iloc[:, -1].values
 
 sc = StandardScaler()
-
 x_train = sc.fit_transform(x_train)
 
 # Latih model Naive Bayes
@@ -26,3 +25,6 @@ your_trained_model.fit(x_train, y_train)
 
 # Simpan model yang sudah dilatih menggunakan joblib
 joblib.dump(your_trained_model, 'model.joblib')
+
+# Simpan juga StandardScaler
+joblib.dump(sc, 'standard_scaler.joblib')

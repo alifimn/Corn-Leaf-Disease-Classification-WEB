@@ -18,6 +18,8 @@ app = Flask(__name__)
 
 # Load the trained model
 model = joblib.load('model.joblib')
+# Load StandardScaler
+scaler = joblib.load('standard_scaler.joblib')
 
 # Upload folder
 UPLOAD_FOLDER = 'static/uploads'
@@ -171,7 +173,8 @@ def predict_image(file_path):
 
     # Lakukan prediksi pada gambar yang telah diproses
     test_values = [red_values, green_values, blue_values, jumlah_bercak_coklat, jumlah_bercak_kuning, contrast_0, correlation_0, energy_0, homogeneity_0, contrast_45, correlation_45, energy_45, homogeneity_45, contrast_90, correlation_90, energy_90, homogeneity_90, contrast_135, correlation_135, energy_135, homogeneity_135]
-    values = np.array(test_values).reshape(-1, 21)
+    x_test = scaler.transform([test_values])
+    values = np.array(x_test).reshape(-1, 21)
     pred = model.predict(values)
     if pred[0] == 0:
         prediction = 'Common Rust'
