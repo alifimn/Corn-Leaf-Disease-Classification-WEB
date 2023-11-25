@@ -98,18 +98,71 @@
         <!-- The Modal -->
         <div id="myModal" class="overlay">
           <div class="modal">
-            <p>Modal content goes here.</p>
+            <h1>IP Camera</h1>
+            <img
+              id="cameraFeed"
+              src=""
+              alt="IP Camera Feed"
+              width="640"
+              height="480"
+            />
             <button onclick="closeModal()">Close Modal</button>
+            <button onclick="predictFromCamera()">Predict</button>
+            <h2 id="predictionResult"></h2>
           </div>
         </div>
+
+        <script>
+          // Fungsi untuk menutup modal
+          function closeModal() {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "none";
+          }
+
+          function predictFromCamera() {
+            // Lakukan permintaan ke endpoint Flask untuk prediksi gambar dari kamera IP
+            fetch("/predict_ip_camera")
+              .then((response) => response.json())
+              .then((data) => {
+                // Tangkap hasil prediksi dan tampilkan pada halaman HTML
+                if (data.prediction) {
+                  // Tampilkan hasil prediksi di dalam elemen dengan ID 'predictionResult'
+                  document.getElementById(
+                    "predictionResult"
+                  ).innerText = `Prediction: ${data.prediction}`;
+                } else {
+                  // Tampilkan pesan jika terjadi kesalahan atau tidak ada prediksi
+                  document.getElementById("predictionResult").innerText =
+                    "Failed to predict.";
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+              });
+          }
+
+          // Fungsi untuk mengambil gambar dari kamera IP secara terus-menerus
+          function getCameraFeed() {
+            var img = document.getElementById("cameraFeed");
+            var src = "/ip_camera"; // Route untuk mendapatkan gambar dari kamera IP
+
+            setInterval(function () {
+              img.src = src + "?" + new Date().getTime(); // Menambahkan timestamp untuk mencegah caching
+            }, 1000); // Ganti gambar setiap detik (sesuaikan dengan kebutuhan)
+          }
+
+          // Panggil fungsi getCameraFeed saat halaman dimuat
+          window.onload = function () {
+            getCameraFeed();
+          };
+        </script>
         <form action="/upload" method="post" enctype="multipart/form-data">
           <input type="file" name="file" accept="image/*" />
           <input type="submit" value="Upload" />
         </form>
 
         {% if prediction %}
-        <h2>Prediction:</h2>
-        <h3><p>{{ prediction }}</p></h3>
+        <h2>Prediction: {{ prediction }}</h2>
         <img src="{{ image_path }}" alt="Uploaded Image" />
         {% endif %} {% if error %}
         <p>Error: {{ error }}</p>

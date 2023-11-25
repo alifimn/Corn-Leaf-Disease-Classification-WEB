@@ -1,11 +1,13 @@
 import cv2
 import numpy as np
 import tkinter as tk
+import requests
+import tempfile
 from PIL import Image, ImageTk
 from tkinter import filedialog
 from scipy.ndimage import binary_fill_holes
 from scipy.ndimage import binary_dilation
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response
 from skimage.feature import graycomatrix, graycoprops
 import os
 import joblib
@@ -21,6 +23,34 @@ model = joblib.load('model.joblib')
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return render_template('index.html', error='No file part')
+
+    file = request.files['file']
+
+    if file.filename == '':
+        return render_template('index.html', error='No selected file')
+
+    if file:
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        file.save(file_path)
+        prediction = predict_image(file_path)
+        return render_template('index.html', prediction=prediction, image_path=file_path)
+
+def gen_frames():
+    url = 'http://192.168.1.7/cam-hi.jpg'
+    while True:
+        img_resp = requests.get(url)
+        img = img_resp.content
+        
+        # Simpan gambar ke file sementara
+        with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as temp_img:
+            temp_img.write(img)
+            temp_img_path = temp_img.name
+        
+        yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + img + b'\r\n')
 
 def predict_image(file_path):
     img = cv2.imread(file_path)
@@ -139,7 +169,7 @@ def predict_image(file_path):
             energy_135 = graycoprops(glcm, props[2])[0, 0]
             homogeneity_135 = graycoprops(glcm, props[3])[0, 0]
 
-    # Tambahkan nilai GLCM ke dalam nilai yang akan dijadikan input untuk model
+    # Lakukan prediksi pada gambar yang telah diproses
     test_values = [red_values, green_values, blue_values, jumlah_bercak_coklat, jumlah_bercak_kuning, contrast_0, correlation_0, energy_0, homogeneity_0, contrast_45, correlation_45, energy_45, homogeneity_45, contrast_90, correlation_90, energy_90, homogeneity_90, contrast_135, correlation_135, energy_135, homogeneity_135]
     values = np.array(test_values).reshape(-1, 21)
     pred = model.predict(values)
@@ -153,25 +183,34 @@ def predict_image(file_path):
         prediction = 'Unknown'
     return prediction
 
+@app.route('/predict_ip_camera')
+def predict_ip_camera():
+    # Mendapatkan gambar dari IP camera
+    img_resp = requests.get('http://192.168.1.7/cam-hi.jpg')
+    img = img_resp.content
+
+    # Simpan gambar ke file sementara
+    with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as temp_img:
+        temp_img.write(img)
+        temp_img_path = temp_img.name
+
+    # Lakukan prediksi pada gambar yang didapatkan
+    prediction = predict_image(temp_img_path)
+
+    # Menghapus file gambar sementara setelah diproses
+    os.remove(temp_img_path)
+
+    # Mengembalikan hasil prediksi dalam format JSON
+    return {'prediction': prediction}
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/upload', methods=['POST'])
-def upload_file():
-    if 'file' not in request.files:
-        return render_template('index.html', error='No file part')
-
-    file = request.files['file']
-
-    if file.filename == '':
-        return render_template('index.html', error='No selected file')
-
-    if file:
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        file.save(file_path)
-        prediction = predict_image(file_path)
-        return render_template('index.html', prediction=prediction, image_path=file_path)
+# Rute untuk menampilkan gambar dari kamera IP
+@app.route('/ip_camera')
+def ip_camera():
+    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
     app.run(debug=True)
