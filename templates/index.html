@@ -1,129 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Corn Leaf Disease Classification</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
 
-      h1 {
-        color: #333;
-        text-align: center;
-      }
-      .overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.7);
-        align-items: center;
-        justify-content: center;
-      }
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-      /* Style for the modal */
-      .modal {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-      }
+  <title>Cornleaf Check</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
 
-      .card {
-        width: 60%;
-        margin: 20px auto;
-        background-color: #fff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        overflow: hidden;
-      }
+  <!-- Favicons -->
+  <link href="{{ url_for('static', filename='assets/img/logo.png') }}" rel="icon">
+  <!-- <link href="{{ url_for('static', filename='assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon"> -->
 
-      .card-body {
-        padding: 20px;
-      }
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,700,700i&display=swap" rel="stylesheet">
 
-      form {
-        text-align: center;
-        margin-top: 20px;
-      }
+  <!-- Vendor CSS Files -->
+  <link href="{{ url_for('static', filename='assets/vendor/animate.css/animate.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/aos/aos.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
 
-      input[type="file"] {
-        margin-right: 10px;
-      }
+  <!-- Template Main CSS File -->
+  <link href="{{ url_for('static', filename='assets/css/style.css') }}" rel="stylesheet">
 
-      input[type="submit"] {
-        padding: 8px 16px;
-        background-color: #4caf50;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      }
+  <!-- =======================================================
+  * Template Name: Moderna
+  * Updated: Sep 18 2023 with Bootstrap v5.3.2
+  * Template URL: https://bootstrapmade.com/free-bootstrap-template-corporate-moderna/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
 
-      h2 {
-        color: #333;
-        text-align: center;
-        margin-top: 20px;
-      }
+<body>
 
-      img {
-        display: block;
-        margin: 0 auto;
-        max-width: 100%;
-        margin-top: 10px;
-      }
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top d-flex align-items-center header-transparent">
+    <!-- ... (kode header lainnya) ... -->
+  </header><!-- End Header -->
+ <!-- ======= Header ======= -->
+ <header id="header" class="fixed-top d-flex align-items-center header-transparent">
+  <div class="container d-flex justify-content-between align-items-center">
 
-      p {
-        color: red;
-        text-align: center;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Corn Leaf Disease Classification</h1>
+    <div class="logo">
+      <!-- <h1 class="text-light"><a href="index.html"><span>Moderna</span></a></h1> -->
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='assets/img/logo.png') }}" alt="" class="img-fluid"></a>
+    </div>
 
-    <div class="card">
-      <div class="card-body">
-        <button onclick="openModal()">Open Camera</button>
 
-        <!-- The Modal -->
-        <div id="myModal" class="overlay">
-          <div class="modal">
-            <p>Modal content goes here.</p>
-            <button onclick="closeModal()">Close Modal</button>
-          </div>
-        </div>
-        <form action="/upload" method="post" enctype="multipart/form-data">
-          <input type="file" name="file" accept="image/*" />
-          <input type="submit" value="Upload" />
-        </form>
+  </div>
+</header><!-- End Header -->
 
-        {% if prediction %}
-        <h2>Prediction: {{ prediction }}</h2>
-        <img src="{{ image_path }}" alt="Uploaded Image" />
-        {% endif %} {% if error %}
-        <p>Error: {{ error }}</p>
-        {% endif %}
+<!-- ======= Hero Section ======= -->
+<section id="hero" class="d-flex justify-cntent-center align-items-center">
+  <div id="heroCarousel" class="container carousel carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+
+    <div class="carousel-item active">
+      <div class="carousel-container">
+        <h2 class="animate__animated animate__fadeInDown">Welcome to <span>Cornleaf Check</span></h2>
+        <p class="animate__animated animate__fadeInUp">Website untuk Mengklasifikasi Penyakit pada Daun Jagung menggunakan metode Naive Bayes.</p>
+        <a href="{{ url_for('home') }}" class="btn-get-started animate__animated animate__fadeInUp">Masuk</a>
       </div>
     </div>
-    <script>
-      // JavaScript functions to open and close the modal
-      function openModal() {
-        document.getElementById("myModal").style.display = "flex";
-      }
 
-      function closeModal() {
-        document.getElementById("myModal").style.display = "none";
-      }
-    </script>
-  </body>
+  </div>
+</section><!-- End Hero -->
+
+<main id="main">
+
+  <!-- ======= Services Section ======= -->
+  <section class="services">
+    <div class="container">
+      <div class="text-center mb-4">
+        <h2>3 Jenis Daun Jagung</h2>
+      </div>
+
+    </div>
+      <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
+          <div class="icon-box icon-box-cyan">
+            <div class="icon"><i class='bx bxl-mongodb'></i></div>
+            <h4 class="title">Healthy</h4>
+            <p class="description">Daun jagung sehat berwarna hijau terang</p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
+          <div class="icon-box icon-box-green">
+            <div class="icon"><i class='bx bxl-mongodb'></i></div>
+            <h4 class="title">Northen Leaf</h4>
+            <p class="description">Daun jagung memiliki bercak bercak kuning</p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="200">
+          <div class="icon-box icon-box-blue">
+            <div class="icon"><i class='bx bxl-mongodb'></i></div>
+            <h4 class="title">Common Rush</h4>
+            <p class="description">Daun jagung memiliki bercak coklat memanjang dan sisi yg rusak</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section><!-- End Services Section -->
+
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<footer id="footer" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-duration="500">
+
+  <div class="container">
+    <div class="copyright">
+      &copy; Copyright <strong><span>Cornleaf Check</span></strong>. All Rights Reserved
+    </div>
+  </div>
+</footer><!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <!-- ... (bagian lain dari halaman HTML) ... -->
+
+  <!-- Vendor JS Files -->
+  <script src="{{ url_for('static', filename='assets/vendor/purecounter/purecounter_vanilla.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/aos/aos.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/glightbox/js/glightbox.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/waypoints/noframework.waypoints.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendor/php-email-form/validate.js') }}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{{ url_for('static', filename='assets/js/main.js') }}"></script>
+
+</body>
+
 </html>
